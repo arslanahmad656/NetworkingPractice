@@ -14,6 +14,9 @@ namespace TcpClientApplication
             {
                 client.Run();
             }
+
+            Console.WriteLine("end of program...");
+            Console.ReadKey();
         }
     }
 }
