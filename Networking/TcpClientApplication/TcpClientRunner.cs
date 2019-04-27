@@ -39,12 +39,15 @@ namespace TcpClientApplication
         {
             while (true)
             {
-                using (StreamReader reader = new StreamReader(stream))
+                if (stream.CanRead)
                 {
-                    string message = reader.ReadToEnd();
-                    if (message.Length > 0)
+                    using (StreamReader reader = new StreamReader(stream))
                     {
-                        Console.WriteLine($"{Environment.NewLine}[Server at {DateTime.Now}] {message}");
+                        string message = reader.ReadToEnd();
+                        if (message.Length > 0)
+                        {
+                            Console.WriteLine($"{Environment.NewLine}[Server at {DateTime.Now}] {message}");
+                        }
                     }
                 }
 
@@ -57,7 +60,8 @@ namespace TcpClientApplication
             try
             {
                 IPEndPoint endPoint = new IPEndPoint(IPAddress.Loopback, port);
-                client = new TcpClient(endPoint);
+                client = new TcpClient();
+                client.Connect(endPoint);
                 stream = client.GetStream();
                 return true;
             }

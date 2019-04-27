@@ -98,6 +98,7 @@ namespace TcpServerApplication
                     while (!token.IsCancellationRequested)
                     {
                         TcpClient client = server.AcceptTcpClient();
+                        await WriteToSummary($"Client connected.", MessageSource.Server);
                         NetworkStream clientStream = client.GetStream();
                         if (server.Pending())
                         {
