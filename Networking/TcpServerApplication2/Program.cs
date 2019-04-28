@@ -10,13 +10,15 @@ namespace TcpServerApplication2
     {
         static void Main(string[] args)
         {
-            var tasks = new[]
-            {
-                Task.Run(() => new TcpApp.TcpServerRunner().Run()),
-                Task.Run(() => new TcpApp.TcpClientRunner().Run())
-            };
+            //var tasks = new[]
+            //{
+            //    Task.Run(() => new TcpApp.TcpServerRunner().Run()),
+            //    Task.Run(() => new TcpApp.TcpClientRunner().Run())
+            //};
 
-            Task.WaitAll(tasks);
+            //Task.WaitAll(tasks);
+
+            new AnotherClient().Run();
         }
     }
 }

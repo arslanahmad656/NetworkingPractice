@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpServerApplication2", "Tc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpApplication", "TcpApplication\TcpApplication.csproj", "{3833B409-8A84-4526-8D10-B175A09F781D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpApplicationFromTutorial", "TcpApplicationFromTutorial\TcpApplicationFromTutorial.csproj", "{BF2581BB-BAE5-455F-B926-C679915FE9D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{3833B409-8A84-4526-8D10-B175A09F781D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3833B409-8A84-4526-8D10-B175A09F781D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3833B409-8A84-4526-8D10-B175A09F781D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF2581BB-BAE5-455F-B926-C679915FE9D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF2581BB-BAE5-455F-B926-C679915FE9D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF2581BB-BAE5-455F-B926-C679915FE9D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF2581BB-BAE5-455F-B926-C679915FE9D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
