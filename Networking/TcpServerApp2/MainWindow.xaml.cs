@@ -146,9 +146,11 @@ namespace TcpServerApp2
 #pragma warning disable CS4014
             Task.Run(() => StartReceivingMessages());
 #pragma warning restore
+
+            Txt_Message.Focus();
         }
 
-        private void Btn_Send_Click(object sender, RoutedEventArgs e)
+        private async void Btn_Send_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -158,6 +160,9 @@ namespace TcpServerApp2
                     if (!string.IsNullOrWhiteSpace(message))
                     {
                         writer.WriteLine(message);
+                        writer.Flush();
+                        await WriteToSummary(message, MessageSource.Server);
+                        Txt_Message.Clear();
                     }
                 }
                 else
@@ -186,9 +191,12 @@ namespace TcpServerApp2
         {
             if (Btn_Send.IsEnabled)
             {
-                if (!string.IsNullOrWhiteSpace((sender as TextBox).Text))
+                if (e.Key == Key.Enter)
                 {
-                    Btn_Send.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    if (!string.IsNullOrWhiteSpace((sender as TextBox).Text))
+                    {
+                        Btn_Send.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    }
                 }
             }
         }
