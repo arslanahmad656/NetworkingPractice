@@ -27,8 +27,7 @@ namespace TcpServerApp2
     {
         private const string logFileName = "server.log";
 
-        private readonly IPAddress ipAddress;
-
+        private IPAddress ipAddress;
         private int port;
         private StreamReader reader;
         private StreamWriter writer;
@@ -37,14 +36,20 @@ namespace TcpServerApp2
         public MainWindow()
         {
             InitializeComponent();
-            ipAddress = Dns.GetHostAddresses(Dns.GetHostName()).First(address => address.AddressFamily == AddressFamily.InterNetwork);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Trace.Listeners.Add(new TextWriterTraceListener(logFileName));
             Trace.AutoFlush = true;
-            Txt_Address.Text = ipAddress.ToString();
+            //Txt_Address.Text = ipAddress.ToString();
+
+            Dns.GetHostAddresses(Dns.GetHostName())
+                .Where(address => address.AddressFamily == AddressFamily.InterNetwork)
+                .ToList()
+                .ForEach(address => Cmb_Address.Items.Add(address));
+            Cmb_Address.SelectedIndex = 0;
+            Cmb_Address.Focus();
         }
 
         private void WriteLog(string text, bool debugAlso = true)
@@ -91,6 +96,7 @@ namespace TcpServerApp2
             Btn_Start.IsEnabled = false;
             Txt_Message.IsEnabled = true;
             Btn_Send.IsEnabled = true;
+            Cmb_Address.IsEnabled = false;
         }
 
         private async void StartReceivingMessages()
@@ -124,7 +130,7 @@ namespace TcpServerApp2
         private async void Btn_Start_Click(object sender, RoutedEventArgs e)
         {
             (sender as Button).IsEnabled = false;
-            var listener = new TcpListener(IPAddress.Any, 0);
+            var listener = new TcpListener(ipAddress, 0);
             listener.Start();
 
             port = ((IPEndPoint)listener.LocalEndpoint).Port;
@@ -199,6 +205,11 @@ namespace TcpServerApp2
                     }
                 }
             }
+        }
+
+        private void Cmb_Address_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ipAddress = ((IEnumerable<object>)e.AddedItems).First() as IPAddress;
         }
     }
 

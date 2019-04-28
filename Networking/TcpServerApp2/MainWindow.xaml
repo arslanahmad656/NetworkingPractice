@@ -25,7 +25,8 @@
     <Grid>
         <StackPanel>
             <WrapPanel>
-                <TextBox x:Name="Txt_Address" IsEnabled="False" Width="150" TextAlignment="Center" VerticalContentAlignment="Center" />
+                <!--<TextBox x:Name="Txt_Address" IsEnabled="False" Width="150" TextAlignment="Center" VerticalContentAlignment="Center" Visibility="Collapsed" />-->
+                <ComboBox x:Name="Cmb_Address" Width="150" VerticalContentAlignment="Center" Height="38" Margin="5" SelectionChanged="Cmb_Address_SelectionChanged"/>
                 <TextBox x:Name="Txt_Port" IsEnabled="False" Width="100" TextAlignment="Center" VerticalContentAlignment="Center" />
                 <Button x:Name="Btn_Start" Width="70" Click="Btn_Start_Click">
                     Start
