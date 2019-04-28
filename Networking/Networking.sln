@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project1", "Project1\Project1.csproj", "{F16A7D4D-8D3A-401D-BB92-19A8B76117C5}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpClientApplication", "TcpClientApplication\TcpClientApplication.csproj", "{80071495-6E4D-427E-B8A1-27CB982EF038}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpServerApplication2", "TcpServerApplication2\TcpServerApplication2.csproj", "{89618E61-CFD2-4606-AF34-5C1EAA3D6834}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpApplication", "TcpApplication\TcpApplication.csproj", "{3833B409-8A84-4526-8D10-B175A09F781D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{89618E61-CFD2-4606-AF34-5C1EAA3D6834}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89618E61-CFD2-4606-AF34-5C1EAA3D6834}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89618E61-CFD2-4606-AF34-5C1EAA3D6834}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3833B409-8A84-4526-8D10-B175A09F781D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3833B409-8A84-4526-8D10-B175A09F781D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3833B409-8A84-4526-8D10-B175A09F781D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3833B409-8A84-4526-8D10-B175A09F781D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
