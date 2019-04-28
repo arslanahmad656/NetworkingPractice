@@ -156,6 +156,17 @@ namespace TcpServerApplication
             pendingMessageToSend = true;
             pendingMessage = Txt_Message.Text;
         }
+
+        private void Txt_Summary_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (Btn_Send.IsEnabled)
+            {
+                if (!string.IsNullOrWhiteSpace((sender as TextBox).Text))
+                {
+                    Btn_Send.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                }
+            }
+        }
     }
 
     class ServerStatusEventsArgs : EventArgs

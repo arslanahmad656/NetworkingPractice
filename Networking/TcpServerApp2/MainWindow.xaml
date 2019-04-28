@@ -1,14 +1,14 @@
-﻿<Window x:Class="TcpServerApplication.MainWindow"
+﻿<Window x:Class="TcpServerApp2.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TcpServerApplication"
+        xmlns:local="clr-namespace:TcpServerApp2"
         mc:Ignorable="d"
         Title="TCP Listener (Server)" Height="356" Width="447"
         ResizeMode="CanMinimize"
         Loaded="Window_Loaded"
-        Closing="Window_Closing">
+        KeyUp="Window_KeyUp">
 
     <Window.Resources>
         <Style TargetType="TextBox">
@@ -21,27 +21,27 @@
             <Setter Property="Margin" Value="5"/>
         </Style>
     </Window.Resources>
-    
+
     <Grid>
         <StackPanel>
             <WrapPanel>
-                <TextBox x:Name="Txt_Address" IsEnabled="False" Text="127.0.0.1" Width="150" TextAlignment="Center" VerticalContentAlignment="Center" />
-                <TextBox x:Name="Txt_Port" Text="32000" Width="100" TextAlignment="Center" VerticalContentAlignment="Center" LostFocus="Txt_Port_LostFocus" />
+                <TextBox x:Name="Txt_Address" IsEnabled="False" Width="150" TextAlignment="Center" VerticalContentAlignment="Center" />
+                <TextBox x:Name="Txt_Port" IsEnabled="False" Width="100" TextAlignment="Center" VerticalContentAlignment="Center" />
                 <Button x:Name="Btn_Start" Width="70" Click="Btn_Start_Click">
                     Start
                 </Button>
-                <Button x:Name="Btn_Stop" Width="70" IsEnabled="False" Click="Btn_Stop_Click">
+                <Button x:Name="Btn_Stop" Width="70" IsEnabled="False">
                     Stop
                 </Button>
             </WrapPanel>
             <WrapPanel>
-                <TextBox x:Name="Txt_Message" Width="341" IsEnabled="False"/>
+                <TextBox x:Name="Txt_Message" Width="341" IsEnabled="False" KeyUp="Txt_Message_KeyUp"/>
                 <Button x:Name="Btn_Send" Width="70" IsEnabled="False" Click="Btn_Send_Click">
                     Send
                 </Button>
             </WrapPanel>
             <WrapPanel>
-                <TextBox x:Name="Txt_Summary" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" Height="211" Width="419" VerticalScrollBarVisibility="Auto" KeyUp="Txt_Summary_KeyUp"/>
+                <TextBox x:Name="Txt_Summary" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" Height="211" Width="419" VerticalScrollBarVisibility="Auto"/>
             </WrapPanel>
         </StackPanel>
     </Grid>

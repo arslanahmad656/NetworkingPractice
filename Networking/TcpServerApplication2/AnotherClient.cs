@@ -21,10 +21,32 @@ namespace TcpServerApplication2
             IPEndPoint ep = new IPEndPoint(ip, port);
             TcpClient client = new TcpClient();
             client.Connect(ep);
-            using (StreamWriter writer = new StreamWriter(client.GetStream()))
-            {
-                writer.Write("Hello from client");
-            }
+            StreamWriter writer = new StreamWriter(client.GetStream(), Encoding.UTF8, 32, true);
+
+            writer.WriteLine("First message");
+            writer.WriteLine("Second message");
+            writer.WriteLine("Third message");
+            writer.Flush();
+
+            Thread.Sleep(2000);
+
+            writer.WriteLine("1 message");
+            writer.WriteLine("2 message");
+            writer.WriteLine("3 message");
+
+            writer.Flush();
+            writer.Close();
+
+            Thread.Sleep(2000);
+
+            writer = new StreamWriter(client.GetStream());
+            writer.WriteLine("AGaing");
+
+            writer.Flush();
+            writer.Close();
+            writer.Dispose();
+
+            client.Close();
         }
     }
 }
