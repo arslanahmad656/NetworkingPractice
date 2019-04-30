@@ -10,7 +10,8 @@ namespace Project1
     {
         static void Main(string[] args)
         {
-            Basics.WebClientExamples.Run();
+            //Basics.WebClientExamples.Run();
+            Basics.UploadingData.Run();
         }
     }
 }
