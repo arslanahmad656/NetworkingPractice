@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpServerApp2", "TcpServerA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpClientApp2", "TcpClientApp2\TcpClientApp2.csproj", "{A2DDDB94-AB29-429C-80E5-C4CA875AC182}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpServer", "HttpServer\HttpServer.csproj", "{C7AEA4FB-9E45-4A8B-BD8D-5CF368A64B00}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{A2DDDB94-AB29-429C-80E5-C4CA875AC182}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2DDDB94-AB29-429C-80E5-C4CA875AC182}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2DDDB94-AB29-429C-80E5-C4CA875AC182}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7AEA4FB-9E45-4A8B-BD8D-5CF368A64B00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7AEA4FB-9E45-4A8B-BD8D-5CF368A64B00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7AEA4FB-9E45-4A8B-BD8D-5CF368A64B00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7AEA4FB-9E45-4A8B-BD8D-5CF368A64B00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

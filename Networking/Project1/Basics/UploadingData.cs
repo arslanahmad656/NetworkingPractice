@@ -16,6 +16,7 @@ namespace Project1.Basics
         {
             //UploadFormDataUsingWebRequest();  // Successful
             UploadFormDataUsingHttpClient();
+            // WebClient does not support cookies
             //Login();
         }
 
