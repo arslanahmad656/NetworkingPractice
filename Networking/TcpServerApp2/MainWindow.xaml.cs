@@ -18,6 +18,9 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Diagnostics;
 using Microsoft.Win32;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Authentication;
 
 namespace TcpServerApp2
 {
@@ -33,6 +36,8 @@ namespace TcpServerApp2
         private StreamReader reader;
         private StreamWriter writer;
         private TcpClient client;
+        private SslStream sslStream;
+        private X509Certificate2 certificate;
 
         public MainWindow()
         {
@@ -59,10 +64,10 @@ namespace TcpServerApp2
                 throw new InvalidOperationException($"IP Address is not set.");
             }
 
-            if (port == 0)
-            {
-                throw new InvalidOperationException($"Invalid Port {0}.");
-            }
+            //if (port == 0) // port is dynamically allocated
+            //{
+            //    throw new InvalidOperationException($"Invalid Port {0}.");
+            //}
 
             if (Chk_Tls.IsChecked == true)
             {
@@ -180,8 +185,25 @@ namespace TcpServerApp2
                 await WriteToSummary("Client received", MessageSource.Server);
                 WriteLog("Client received");
 
-                reader = new StreamReader(client.GetStream());
-                writer = new StreamWriter(client.GetStream());
+                Stream streamToUse = client.GetStream();
+                if (Chk_Tls.IsChecked == true)
+                {
+                    await WriteToSummary("Establishing TLS connection.", MessageSource.Server);
+                    WriteLog("Establishing TLS connection.");
+
+                    sslStream = new SslStream(streamToUse, false);
+
+                    certificate = new X509Certificate2(Txt_CertificatePath.Text, Pwd_Certificate.Password);
+                    await sslStream.AuthenticateAsServerAsync(certificate, false, SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12, true);
+
+                    await WriteToSummary("TLS connection established.", MessageSource.Server);
+                    WriteLog("TLS connection established.");
+
+                    streamToUse = sslStream;
+                }
+
+                reader = new StreamReader(streamToUse);
+                writer = new StreamWriter(streamToUse);
 
 #pragma warning disable CS4014
                 Task.Run(() => StartReceivingMessages());
