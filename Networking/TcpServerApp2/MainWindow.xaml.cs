@@ -128,9 +128,11 @@ namespace TcpServerApp2
             Txt_Message.IsEnabled = true;
             Btn_Send.IsEnabled = true;
             Cmb_Address.IsEnabled = false;
+            Txt_Port.IsEnabled = false;
             Txt_CertificatePath.IsEnabled = false;
             Pwd_Certificate.IsEnabled = false;
             Btn_SelectCertificate.IsEnabled = false;
+            Chk_Tls.IsEnabled = false;
         }
 
         private async void StartReceivingMessages()
@@ -167,6 +169,7 @@ namespace TcpServerApp2
             try
             {
                 Validate();
+                SetControlsStateForServerStarted();
 
                 (sender as Button).IsEnabled = false;
                 int.TryParse(Txt_Port.Text, out var portToAttempt);
@@ -181,24 +184,22 @@ namespace TcpServerApp2
 
                 await Task.Run(() => client = listener.AcceptTcpClient());
 
-                SetControlsStateForServerStarted();
-
                 await WriteToSummary("Client received", MessageSource.Server);
                 WriteLog("Client received");
 
                 Stream streamToUse = client.GetStream();
                 if (Chk_Tls.IsChecked == true)
                 {
-                    await WriteToSummary("Establishing TLS connection.", MessageSource.Server);
-                    WriteLog("Establishing TLS connection.");
+                    await WriteToSummary("Performing TLS handshake.", MessageSource.Server);
+                    WriteLog("Performing TLS handshake.");
 
                     sslStream = new SslStream(streamToUse, false);
 
                     certificate = new X509Certificate2(Txt_CertificatePath.Text, Pwd_Certificate.Password);
                     await sslStream.AuthenticateAsServerAsync(certificate, false, SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12, true);
 
-                    await WriteToSummary("TLS connection established.", MessageSource.Server);
-                    WriteLog("TLS connection established.");
+                    await WriteToSummary("TLS handshake completed.", MessageSource.Server);
+                    WriteLog("TLS handshake completed.");
 
                     streamToUse = sslStream;
                 }

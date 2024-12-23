@@ -23,8 +23,9 @@
     <Grid>
         <StackPanel>
             <WrapPanel>
-                <TextBox x:Name="Txt_Address" Width="150" TextAlignment="Center" VerticalContentAlignment="Center" GotFocus="Txt_Address_GotFocus" LostFocus="Txt_Address_LostFocus" KeyUp="ConnectOnKeyEvent"/>
-                <TextBox x:Name="Txt_Port" Width="100" TextAlignment="Center" VerticalContentAlignment="Center" GotFocus="Txt_Port_GotFocus" LostFocus="Txt_Port_LostFocus" KeyUp="ConnectOnKeyEvent"/>
+                <CheckBox x:Name="Chk_Tls" VerticalAlignment="Center" Margin="5 0 0 0">TLS</CheckBox>
+                <TextBox x:Name="Txt_Address" Width="134" TextAlignment="Center" VerticalContentAlignment="Center" GotFocus="Txt_Address_GotFocus" LostFocus="Txt_Address_LostFocus" KeyUp="ConnectOnKeyEvent"/>
+                <TextBox x:Name="Txt_Port" Width="72" TextAlignment="Center" VerticalContentAlignment="Center" GotFocus="Txt_Port_GotFocus" LostFocus="Txt_Port_LostFocus" KeyUp="ConnectOnKeyEvent"/>
                 <Button x:Name="Btn_Connect" Width="70" Click="Btn_Connect_Click">
                     Connect
                 </Button>

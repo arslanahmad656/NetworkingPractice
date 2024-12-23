@@ -17,6 +17,9 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 using System.Diagnostics;
+using System.Net.Security;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 
 namespace TcpClientApp2
 {
@@ -32,6 +35,7 @@ namespace TcpClientApp2
         private StreamReader reader;
         private StreamWriter writer;
         private TcpClient client;
+        private SslStream sslStream;
 
         public MainWindow()
         {
@@ -51,7 +55,7 @@ namespace TcpClientApp2
             ipAddress = Dns.GetHostAddresses(Dns.GetHostName()).First(address => address.AddressFamily == AddressFamily.InterNetwork);
             Txt_Address.Text = ipAddress.ToString();
 
-            Txt_Port.Focus();
+            Chk_Tls.Focus();
         }
 
         private void WriteLog(string text, bool debugAlso = true)
@@ -105,9 +109,20 @@ namespace TcpClientApp2
                 {
                     SetControlsForState(connected: true);
                     WriteLog("Client connected");
+                    Stream streamToUse = client.GetStream();
+                    if (Chk_Tls.IsChecked == true)
+                    {
+                        WriteLog("Performing TLS handshake.");
+                        await WriteToSummary("Performing TLS handshake.", MessageSource.Client);
+                        sslStream = new SslStream(streamToUse, false, IsServerCertificateValid);
+                        await sslStream.AuthenticateAsClientAsync(Txt_Address.Text, null, SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12, true);
+                        WriteLog("TLS handshake completed.");
+                        await WriteToSummary("TLS handshake completed.", MessageSource.Client);
+                        streamToUse = sslStream;
+                    }
 
-                    reader = new StreamReader(client.GetStream());
-                    writer = new StreamWriter(client.GetStream());
+                    reader = new StreamReader(streamToUse);
+                    writer = new StreamWriter(streamToUse);
 
                     Txt_Message.Focus();
                     await WriteToSummary($"Connected to {ep}", MessageSource.Client);
@@ -124,6 +139,11 @@ namespace TcpClientApp2
             {
                 HandleError(ex);
             }
+        }
+
+        private static bool IsServerCertificateValid(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        {
+            return true;
         }
 
         private void SetControlsForState(bool connected)
