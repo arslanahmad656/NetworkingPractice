@@ -30,7 +30,8 @@ namespace TcpClientApp2
     {
         private const string logFileName = "client.log";
 
-        private IPAddress ipAddress;
+        //private IPAddress ipAddress;
+        string serverAddress;
         private int port;
         private StreamReader reader;
         private StreamWriter writer;
@@ -52,8 +53,10 @@ namespace TcpClientApp2
         {
             Trace.Listeners.Add(new TextWriterTraceListener(logFileName));
             Trace.AutoFlush = true;
-            ipAddress = Dns.GetHostAddresses(Dns.GetHostName()).First(address => address.AddressFamily == AddressFamily.InterNetwork);
-            Txt_Address.Text = ipAddress.ToString();
+            //ipAddress = Dns.GetHostAddresses(Dns.GetHostName()).First(address => address.AddressFamily == AddressFamily.InterNetwork);
+            serverAddress = "localhost";
+            //Txt_Address.Text = ipAddress.ToString();
+            Txt_Address.Text = serverAddress;
 
             Chk_Tls.Focus();
         }
@@ -68,7 +71,7 @@ namespace TcpClientApp2
             }
         }
 
-        private void HandleError(Exception ex)
+        private void HandleError(Exception ex, bool exit = true)
         {
             MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             var error = new StringBuilder();
@@ -89,7 +92,10 @@ namespace TcpClientApp2
             }
 
             WriteLog(error.ToString());
-            Environment.Exit(0);
+            if (exit)
+            {
+                Environment.Exit(0);
+            }
         }
 
         private async Task WriteToSummary(string message, MessageSource source)
@@ -102,8 +108,8 @@ namespace TcpClientApp2
             try
             {
                 client = new TcpClient();
-                var ep = new IPEndPoint(ipAddress, port);
-                client.Connect(ep);
+                //var ep = new IPEndPoint(ipAddress, port);
+                client.Connect(serverAddress, port);
 
                 if (client.Connected)
                 {
@@ -114,7 +120,7 @@ namespace TcpClientApp2
                     {
                         WriteLog("Performing TLS handshake.");
                         await WriteToSummary("Performing TLS handshake.", MessageSource.Client);
-                        sslStream = new SslStream(streamToUse, false, IsServerCertificateValid);
+                        sslStream = new SslStream(streamToUse, false, null, null);
                         await sslStream.AuthenticateAsClientAsync(Txt_Address.Text, null, SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12, true);
                         WriteLog("TLS handshake completed.");
                         await WriteToSummary("TLS handshake completed.", MessageSource.Client);
@@ -125,25 +131,30 @@ namespace TcpClientApp2
                     writer = new StreamWriter(streamToUse);
 
                     Txt_Message.Focus();
-                    await WriteToSummary($"Connected to {ep}", MessageSource.Client);
+                    await WriteToSummary($"Connected to {client.Client.LocalEndPoint}", MessageSource.Client);
 #pragma warning disable CS4014
                     Task.Run(() => StartReceivingMessages());
 #pragma warning restore
                 }
                 else
                 {
-                    throw new Exception($"Could not connect to {ep}");
+                    throw new Exception($"Could not connect to {client.Client.LocalEndPoint}");
                 }
             }
             catch (Exception ex)
             {
-                HandleError(ex);
+                HandleError(ex, false);
             }
         }
 
         private static bool IsServerCertificateValid(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
-            return true;
+            if (sslPolicyErrors == SslPolicyErrors.None)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private void SetControlsForState(bool connected)
@@ -164,14 +175,16 @@ namespace TcpClientApp2
         private void Txt_Address_LostFocus(object sender, RoutedEventArgs e)
         {
             var textbox = sender as TextBox;
-            try
-            {
-                ipAddress = IPAddress.Parse(textbox.Text);
-            }
-            catch
-            {
-                textbox.Text = ipAddress.ToString();
-            }
+            //try
+            //{
+            //    ipAddress = IPAddress.Parse(textbox.Text);
+            //}
+            //catch
+            //{
+            //    textbox.Text = ipAddress.ToString();
+            //}
+
+            serverAddress = textbox.Text;
         }
 
         private void Txt_Port_GotFocus(object sender, RoutedEventArgs e)

@@ -49,10 +49,13 @@ namespace TcpServerApp2
             Trace.Listeners.Add(new TextWriterTraceListener(logFileName));
             Trace.AutoFlush = true;
 
-            Dns.GetHostAddresses(Dns.GetHostName())
+            var addresses = Dns.GetHostAddresses(Dns.GetHostName())
                 .Where(address => address.AddressFamily == AddressFamily.InterNetwork)
-                .ToList()
-                .ForEach(address => Cmb_Address.Items.Add(address));
+                .ToList();
+            addresses.Insert(0, IPAddress.Loopback);
+            addresses.Insert(1, IPAddress.Any);
+
+            addresses.ForEach(address => Cmb_Address.Items.Add(address));
             Cmb_Address.SelectedIndex = 0;
             Chk_Tls.Focus();
         }
