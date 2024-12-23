@@ -169,7 +169,8 @@ namespace TcpServerApp2
                 Validate();
 
                 (sender as Button).IsEnabled = false;
-                var listener = new TcpListener(ipAddress, 0);
+                int.TryParse(Txt_Port.Text, out var portToAttempt);
+                var listener = new TcpListener(ipAddress, portToAttempt);
                 listener.Start();
 
                 port = ((IPEndPoint)listener.LocalEndpoint).Port;
