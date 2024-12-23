@@ -17,6 +17,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 using System.Diagnostics;
+using Microsoft.Win32;
 
 namespace TcpServerApp2
 {
@@ -42,14 +43,39 @@ namespace TcpServerApp2
         {
             Trace.Listeners.Add(new TextWriterTraceListener(logFileName));
             Trace.AutoFlush = true;
-            //Txt_Address.Text = ipAddress.ToString();
 
             Dns.GetHostAddresses(Dns.GetHostName())
                 .Where(address => address.AddressFamily == AddressFamily.InterNetwork)
                 .ToList()
                 .ForEach(address => Cmb_Address.Items.Add(address));
             Cmb_Address.SelectedIndex = 0;
-            Cmb_Address.Focus();
+            Chk_Tls.Focus();
+        }
+
+        private void Validate()
+        {
+            if (ipAddress == null)
+            {
+                throw new InvalidOperationException($"IP Address is not set.");
+            }
+
+            if (port == 0)
+            {
+                throw new InvalidOperationException($"Invalid Port {0}.");
+            }
+
+            if (Chk_Tls.IsChecked == true)
+            {
+                if (string.IsNullOrWhiteSpace(Txt_CertificatePath.Text))
+                {
+                    throw new InvalidOperationException("Certificate path is required for TLS.");
+                }
+
+                if (string.IsNullOrWhiteSpace(Pwd_Certificate.Password))
+                {
+                    throw new InvalidOperationException("Certificate password is required for TLS.");
+                }
+            }
         }
 
         private void WriteLog(string text, bool debugAlso = true)
@@ -97,6 +123,9 @@ namespace TcpServerApp2
             Txt_Message.IsEnabled = true;
             Btn_Send.IsEnabled = true;
             Cmb_Address.IsEnabled = false;
+            Txt_CertificatePath.IsEnabled = false;
+            Pwd_Certificate.IsEnabled = false;
+            Btn_SelectCertificate.IsEnabled = false;
         }
 
         private async void StartReceivingMessages()
@@ -114,11 +143,12 @@ namespace TcpServerApp2
                         }
                         await Task.Delay(10);
                     }
-                    catch (Exception exToIgnore)
+                    catch
                     {
 
                     }
                 }
+
                 await WriteToSummary("Client disconnected", MessageSource.Server);
             }
             catch (Exception ex)
@@ -129,31 +159,40 @@ namespace TcpServerApp2
 
         private async void Btn_Start_Click(object sender, RoutedEventArgs e)
         {
-            (sender as Button).IsEnabled = false;
-            var listener = new TcpListener(ipAddress, 0);
-            listener.Start();
+            try
+            {
+                Validate();
 
-            port = ((IPEndPoint)listener.LocalEndpoint).Port;
-            Txt_Port.Text = port.ToString();
+                (sender as Button).IsEnabled = false;
+                var listener = new TcpListener(ipAddress, 0);
+                listener.Start();
 
-            await WriteToSummary($"Listening at {listener.LocalEndpoint}", MessageSource.Server);
-            WriteLog("Server started listening at " + listener.LocalEndpoint);
+                port = ((IPEndPoint)listener.LocalEndpoint).Port;
+                Txt_Port.Text = port.ToString();
 
-            await Task.Run(() => client = listener.AcceptTcpClient());
+                await WriteToSummary($"Listening at {listener.LocalEndpoint}", MessageSource.Server);
+                WriteLog("Server started listening at " + listener.LocalEndpoint);
 
-            SetControlsStateForServerStarted();
+                await Task.Run(() => client = listener.AcceptTcpClient());
 
-            await WriteToSummary("Client received", MessageSource.Server);
-            WriteLog("Client received");
+                SetControlsStateForServerStarted();
 
-            reader = new StreamReader(client.GetStream());
-            writer = new StreamWriter(client.GetStream());
+                await WriteToSummary("Client received", MessageSource.Server);
+                WriteLog("Client received");
+
+                reader = new StreamReader(client.GetStream());
+                writer = new StreamWriter(client.GetStream());
 
 #pragma warning disable CS4014
-            Task.Run(() => StartReceivingMessages());
+                Task.Run(() => StartReceivingMessages());
 #pragma warning restore
 
-            Txt_Message.Focus();
+                Txt_Message.Focus();
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
         }
 
         private async void Btn_Send_Click(object sender, RoutedEventArgs e)
@@ -184,7 +223,7 @@ namespace TcpServerApp2
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.S)
+            if (e.Key == Key.Enter)
             {
                 if (Btn_Start.IsEnabled)
                 {
@@ -210,6 +249,33 @@ namespace TcpServerApp2
         private void Cmb_Address_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ipAddress = ((IEnumerable<object>)e.AddedItems).First() as IPAddress;
+        }
+
+        private void Chk_Tls_Checked(object sender, RoutedEventArgs e)
+        {
+            Txt_CertificatePath.IsEnabled = true;
+            Pwd_Certificate.IsEnabled = true;
+            Btn_SelectCertificate.IsEnabled = true;
+        }
+
+        private void Chk_Tls_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Txt_CertificatePath.IsEnabled = false;
+            Pwd_Certificate.IsEnabled = false;
+            Btn_SelectCertificate.IsEnabled = false;
+        }
+
+        private void Btn_SelectCertificate_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog
+            {
+                Filter = "Certificate Files|*.pfx"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                Txt_CertificatePath.Text = dialog.FileName;
+            }
         }
     }
 

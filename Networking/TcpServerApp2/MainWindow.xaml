@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TcpServerApp2"
         mc:Ignorable="d"
-        Title="TCP Listener (Server)" Height="356" Width="447"
+        Title="TCP Listener (Server)" Height="405" Width="447"
         ResizeMode="CanMinimize"
         Loaded="Window_Loaded"
         KeyUp="Window_KeyUp">
@@ -25,7 +25,12 @@
     <Grid>
         <StackPanel>
             <WrapPanel>
-                <!--<TextBox x:Name="Txt_Address" IsEnabled="False" Width="150" TextAlignment="Center" VerticalContentAlignment="Center" Visibility="Collapsed" />-->
+                <CheckBox x:Name="Chk_Tls" VerticalAlignment="Center" Margin="5" Checked="Chk_Tls_Checked" Unchecked="Chk_Tls_Unchecked">TLS</CheckBox>
+                <TextBox x:Name="Txt_CertificatePath" Width="170" VerticalContentAlignment="Center" TextAlignment="Left" IsEnabled="False" />
+                <PasswordBox x:Name="Pwd_Certificate" Width="117" Height="38" VerticalContentAlignment="Center" IsEnabled="False"/>
+                <Button x:Name="Btn_SelectCertificate" Width="70" Height="38" Margin="10 5 5 5" IsEnabled="False" Click="Btn_SelectCertificate_Click">Browse</Button>
+            </WrapPanel>
+            <WrapPanel>
                 <ComboBox x:Name="Cmb_Address" Width="150" VerticalContentAlignment="Center" Height="38" Margin="5" SelectionChanged="Cmb_Address_SelectionChanged"/>
                 <TextBox x:Name="Txt_Port" IsEnabled="False" Width="100" TextAlignment="Center" VerticalContentAlignment="Center" />
                 <Button x:Name="Btn_Start" Width="70" Click="Btn_Start_Click">
@@ -44,6 +49,7 @@
             <WrapPanel>
                 <TextBox x:Name="Txt_Summary" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" Height="211" Width="419" VerticalScrollBarVisibility="Auto"/>
             </WrapPanel>
+            <Border BorderBrush="Black" BorderThickness="1" Height="100"/>
         </StackPanel>
     </Grid>
 </Window>
